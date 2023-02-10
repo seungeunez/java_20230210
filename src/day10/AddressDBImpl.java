@@ -73,7 +73,7 @@ public class AddressDBImpl implements AddressDB {
 	public int insertAddressMap(Map<String, Object> map) {
 
 		try {
-			
+
 			Document doc = new Document();
 			doc.put("_id", map.get("code"));
 			doc.put("address", map.get("address"));
@@ -81,10 +81,9 @@ public class AddressDBImpl implements AddressDB {
 			doc.put("regdate", map.get("regdate"));
 			doc.put("memberid", map.get("memberid"));
 			InsertOneResult result = this.addresses.insertOne(doc);
-			
+
 			System.out.println(result);
-			
-			
+
 			return 0;
 
 		} catch (Exception e) {
@@ -110,7 +109,9 @@ public class AddressDBImpl implements AddressDB {
 			Address address = documentToAddress(doc);
 
 			// members의 컬렉션에서 해당 아이디 정보를 가져와야 됨
-			Document docMember = this.members.find(Filters.eq("_id", doc.getString("memberid"))).first(); // members collection이 필요함
+			Document docMember = this.members.find(Filters.eq("_id", doc.getString("memberid"))).first(); // members
+																											// collection이
+																											// 필요함
 
 			// Document -> Member로 바꾼후
 			Member member = new Member();
@@ -141,8 +142,6 @@ public class AddressDBImpl implements AddressDB {
 
 //===============================================================================
 
-	
-	
 	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
@@ -172,45 +171,44 @@ public class AddressDBImpl implements AddressDB {
 			return null;
 		}
 	}
+
+
+//========================================================================================================
+	
+	
+//	 회원에 해당하는 주소 전체 조회 - 다른버전
+//	@Override
 //	public List<Address> selectAddressList(Member member) {
-//		
+//
 //		try {
-//			
-//			//주소에서 member로 전달되는 해당 아이디 주소만 목록조회
+//
+//			// 주소에서 member로 전달되는 해당 아이디 주소만 목록조회
 //			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
-//			
+//
 //			List<Address> list = new ArrayList<>();
 //
-//			
 //			for (Document doc : docs) {
-////				System.out.println(doc);
-//				
-//				
-//				
-//				
-//				//회원에서 아이디가 일치하는 정보 가져오기;
-////			Document doc1 = this.members.find(Filters.eq("_id",doc.getString("memberid"))).first();
-////			System.out.println(doc1);
-//				
-//				
-//				//doc1을 member1로 바꿔서 넣어줘야함
-//				
-////				Member member1 = new Member();
-////				member1.setId(doc1.getString("_id"));
-////				member1.setName(doc1.getString("name"));
-////				member1.setPassword(doc1.getString("password"));
-////				member1.setPhone(doc1.getString("phone"));
-////				member1.setRegdate(doc1.getDate("regdate"));
-////				member1.setRole(doc1.getString("role"));
-//				
-//				
-//				Address address = documentToAddress(doc);
-//		  		// set을 이용해서 address객체에 회원정보 추가
-//		  		address.setMemberid( documentToMember(doc1) );
-//				
-//				//set을 이용해서 address객체에 회원정보 추가
-//				//address.setMemberid(member1);
-//				
+//				System.out.println(doc);
+//
+//				// 회원에서 아이디가 일치하는 정보 가져오기;
+//				Document doc1 = this.members.find(Filters.eq("_id", doc.getString("memberid"))).first();
+//				System.out.println(doc1);
+//
+//				// doc1을 member1로 바꿔서 넣어줘야함
+//
+//				Member member1 = new Member();
+//				member1.setId(doc1.getString("_id"));
+//				member1.setName(doc1.getString("name"));
+//				member1.setPassword(doc1.getString("password"));
+//				member1.setPhone(doc1.getString("phone"));
+//				member1.setRegdate(doc1.getDate("regdate"));
+//				member1.setRole(doc1.getString("role"));
+//
+//				Address address = new Address();
+//
+//				// set을 이용해서 address객체에 회원정보 추가
+//				address.setMemberid(member1);
+//
 //				list.add(address);
 //			}
 //
@@ -248,7 +246,7 @@ public class AddressDBImpl implements AddressDB {
 		return address;
 
 	}
-	
+
 	private Member documentToMember(Document doc) {
 		Member member = new Member();
 		member.setId(doc.getString("_id"));
