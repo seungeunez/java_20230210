@@ -81,23 +81,30 @@ public class AddressDBImpl implements AddressDB {
 
 //===============================================================================
 
+	//주소 1개 조회
 	@Override
 	public Address selectAddressOne(long code) {
 
 		return null;
 	}
 
+//===============================================================================
+	
 	@Override
 	public Map<String, Object> selectAddressMapOne(long code) {
 
 		return null;
 	}
+	
+//===============================================================================
 
 	@Override
 	public List<Address> selectAddressList(Member member) {
 
 		return null;
 	}
+	
+//===============================================================================
 
 	@Override
 	public List<Map<String, Object>> selectAddressListMap(Member member) {
