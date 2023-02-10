@@ -80,7 +80,11 @@ public class AddressDBImpl implements AddressDB {
 			doc.put("postcode", map.get("postcode"));
 			doc.put("regdate", map.get("regdate"));
 			doc.put("memberid", map.get("memberid"));
-
+			InsertOneResult result = this.addresses.insertOne(doc);
+			
+			System.out.println(result);
+			
+			
 			return 0;
 
 		} catch (Exception e) {
@@ -106,8 +110,8 @@ public class AddressDBImpl implements AddressDB {
 			Address address = documentToAddress(doc);
 
 			// members의 컬렉션에서 해당 아이디 정보를 가져와야 됨
-			Bson filter = Filters.eq("_id", doc.getString("memberid"));
-			Document docMember = this.members.find(filter).first(); // member collection이 필요함
+			//Bson filter = Filters.eq("_id", doc.getString("memberid"));
+			Document docMember = this.members.find(Filters.eq("_id", doc.getString("memberid"))).first(); // members collection이 필요함
 
 			// Documnet -> Member로 바꾼후
 			Member member = new Member();
@@ -138,6 +142,8 @@ public class AddressDBImpl implements AddressDB {
 
 //===============================================================================
 
+	
+	
 	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
@@ -152,8 +158,13 @@ public class AddressDBImpl implements AddressDB {
 
 				list.add(documentToAddress(doc));
 
+				
+				address.getCode();
 				address.getAddress();
 				address.getPostcode();
+				address.getRegdate();
+				address.getMemberid();
+				
 				
 				
 			}
