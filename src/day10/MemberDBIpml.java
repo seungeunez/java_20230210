@@ -39,9 +39,9 @@ public class MemberDBIpml implements MemberDB {
 	public int insertMember(Member member) {
 		try {
 			
-			Bson filter = Filters.eq("_id", "SEQ_MEMBER_NO");
-			Bson update = Updates.inc("idx", 1);
-			Document doc = this.sequence.findOneAndUpdate(filter, update);
+//			Bson filter = Filters.eq("_id", "SEQ_MEMBER_NO");
+//			Bson update = Updates.inc("idx", 1);
+//			Document doc = this.sequence.findOneAndUpdate(filter, update);
 			
 			
 			
