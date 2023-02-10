@@ -1,5 +1,6 @@
 package day10;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
@@ -38,13 +40,10 @@ public class MemberDBIpml implements MemberDB {
 	@Override
 	public int insertMember(Member member) {
 		try {
-			
+
 //			Bson filter = Filters.eq("_id", "SEQ_MEMBER_NO");
 //			Bson update = Updates.inc("idx", 1);
 //			Document doc = this.sequence.findOneAndUpdate(filter, update);
-			
-			
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,21 +106,7 @@ public class MemberDBIpml implements MemberDB {
 			Document doc = this.members.find(Filters.eq("_id", id)).first();
 
 			if (doc != null) {
-				
-				//빈공간
-				Map<String, Object> map = new HashMap<String, Object>();
-				
-				//복사
-				map.put("_id", doc.get("_id"));
-				map.put("password", doc.get("password"));
-				map.put("name", doc.get("name"));
-				map.put("age", doc.get("age"));
-				map.put("phone", doc.get("phone"));
-				map.put("role", doc.get("role"));
-				map.put("regdate", doc.get("regdate"));
-				
-				
-				return map;
+				return documentToMap(doc);
 
 			}
 			return null;
@@ -143,12 +128,51 @@ public class MemberDBIpml implements MemberDB {
 
 //=====================================================================
 
-	
-	//map을 이용해서 전체조회
+	// map을 이용해서 전체조회
 	@Override
 	public List<Map<String, Object>> selectMemberMapList() {
 
-		return null;
+		try {
+
+			// n개의 데이터
+			FindIterable<Document> docs = this.members.find(); // 전체니깐 find()안에 아무것도 안들어간다
+			List<Map<String, Object>> list = new ArrayList<>();
+
+			for (Document doc : docs) {
+				list.add(documentToMap(doc));
+			}
+			if (!list.isEmpty()) {
+				return list;
+			}
+
+			return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+//==========================================================================
+
+	// Document -> Map으로 바꿔주는 메소드
+	private Map<String, Object> documentToMap(Document doc) {
+
+		//빈공간
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		
+		//복사
+		map.put("_id", doc.get("_id"));
+		map.put("password", doc.get("password"));
+		map.put("name", doc.get("name"));
+		map.put("age", doc.get("age"));
+		map.put("phone", doc.get("phone"));
+		map.put("role", doc.get("role"));
+		map.put("regdate", doc.get("regdate"));
+		return map;
+
 	}
 
 }
