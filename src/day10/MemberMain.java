@@ -30,31 +30,31 @@ public class MemberMain {
 //=======================================================================
 
 		// map이용 - 1개 조회
-//		Map<String, Object> map = mDB.selectMemberMapOne("salt");//내가 등록한 _id 넣으면 해당 아이디 정보 출력
-//		
-//		System.out.println("아이디: " + map.get("_id"));
-//		System.out.println("비밀번호: " + map.get("password"));
-//		System.out.println("이름: " + map.get("name"));
-//		System.out.println("나이: " + map.get("age"));
-//		System.out.println("전화번호: " + map.get("phone"));
-//		System.out.println("권한: " + map.get("role"));
-//		System.out.println("등록일: " + map.get("regdate"));
+		Map<String, Object> map = mDB.selectMemberMapOne("salt");//내가 등록한 _id 넣으면 해당 아이디 정보 출력
+		
+		System.out.println("아이디: " + map.get("_id"));
+		System.out.println("비밀번호: " + map.get("password"));
+		System.out.println("이름: " + map.get("name"));
+		System.out.println("나이: " + map.get("age"));
+		System.out.println("전화번호: " + map.get("phone"));
+		System.out.println("권한: " + map.get("role"));
+		System.out.println("등록일: " + map.get("regdate"));
 
 //=======================================================================
 
 		// map이용 - 전제 조회
-		List<Map<String, Object>> list = mDB.selectMemberMapList();
-
-		for (Map<String, Object> map : list) {
-			System.out.println("아이디: " + map.get("_id"));
-			System.out.println("비밀번호: " + map.get("password"));
-			System.out.println("이름: " + map.get("name"));
-			System.out.println("나이: " + map.get("age"));
-			System.out.println("전화번호: " + map.get("phone"));
-			System.out.println("권한: " + map.get("role"));
-			System.out.println("등록일: " + map.get("regdate"));
-			System.out.println("----------------------------------");
-		}
+//		List<Map<String, Object>> list = mDB.selectMemberMapList();
+//
+//		for (Map<String, Object> map : list) {
+//			System.out.println("아이디: " + map.get("_id"));
+//			System.out.println("비밀번호: " + map.get("password"));
+//			System.out.println("이름: " + map.get("name"));
+//			System.out.println("나이: " + map.get("age"));
+//			System.out.println("전화번호: " + map.get("phone"));
+//			System.out.println("권한: " + map.get("role"));
+//			System.out.println("등록일: " + map.get("regdate"));
+//			System.out.println("----------------------------------");
+//		}
 
 //=======================================================================		
 

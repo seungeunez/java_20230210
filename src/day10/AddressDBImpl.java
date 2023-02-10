@@ -88,29 +88,29 @@ public class AddressDBImpl implements AddressDB {
 	public Address selectAddressOne(long code) {
 
 		try {
-			Bson filter = Filters.eq("_id",code);
-			Document doc = this.addresses.find(filter).first();
-			System.out.println(doc.toString());
-			
-			Address address = new Address();
-			address.setCode(doc.getLong("_id"));
-			address.setAddress(doc.getString("address"));
-			address.setPostcode(doc.getString("postcode"));
-			address.setRegdate(doc.getDate("regdate"));
-			
-			Member member = new Member();
-			address.setMemberid(member);
-			
-			
-			
-			
+			Document doc = this.addresses.find(Filters.eq("_id", code)).first();
+			// System.out.println(doc.toString());
+
+			if (doc != null) {
+				Address address = new Address();
+				address.setCode(doc.getLong("_id"));
+				address.setAddress(doc.getString("address"));
+				address.setPostcode(doc.getString("postcode"));
+				address.setRegdate(doc.getDate("regdate"));
+
+				Member member = new Member();
+				member.setId(doc.getString("member"));
+				address.setMemberid(member);
+
+				return address;
+			}
+			return null;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 
-		return null;
 	}
 
 //===============================================================================
