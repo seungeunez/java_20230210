@@ -1,15 +1,14 @@
 package day10;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
@@ -123,10 +122,29 @@ public class AddressDBImpl implements AddressDB {
 
 //===============================================================================
 
+	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
 
-		return null;
+		
+
+		try {
+
+			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
+			List<Address> list = new ArrayList<>();
+			for (Document doc : docs) {
+				list.add(documentToAddress(doc));
+			}
+			if (!list.isEmpty()) {
+				return list;
+			}
+			return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 //===============================================================================
@@ -135,6 +153,21 @@ public class AddressDBImpl implements AddressDB {
 	public List<Map<String, Object>> selectAddressListMap(Member member) {
 
 		return null;
+	}
+
+//===============================================================================	
+
+	// Document -> Address로 변경하는 메소드
+	private Address documentToAddress(Document doc) {
+
+		Address address = new Address();
+		address.setCode(doc.getLong("_id"));
+		address.setAddress(doc.getString("address"));
+		address.setPostcode(doc.getString("postcode"));
+		address.setRegdate(doc.getDate("regdate"));
+
+		return address;
+
 	}
 
 }

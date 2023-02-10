@@ -1,6 +1,6 @@
 package day10;
 
-import java.util.Date;
+import java.util.List;
 
 public class AddressMain {
 
@@ -29,15 +29,28 @@ public class AddressMain {
 
 		// 주소 1개 조회
 
-		Address address = aDB.selectAddressOne(10001);
+//		Address address = aDB.selectAddressOne(10001);
+//
+//			System.out.println("번호: " + address.getCode());
+//			System.out.println("주소: " + address.getAddress());
+//			System.out.println("우편번호: " + address.getPostcode());
+//			System.out.println("등록일자: " + address.getRegdate());
+//			System.out.println("아이디: " + address.getMemberid().getId());
 
+//==========================================================================
+
+		// 전체 조회
+		List<Address> list = aDB.selectAddressList("ququ");
+
+		for (Address address : list) {
 			System.out.println("번호: " + address.getCode());
 			System.out.println("주소: " + address.getAddress());
 			System.out.println("우편번호: " + address.getPostcode());
 			System.out.println("등록일자: " + address.getRegdate());
-			System.out.println("아이디: " + address.getMemberid().getId());
-	
-
+			System.out.println("아이디: " + address.getMemberid());
+			System.out.println("--------------------------------");
+			
+		}
 	}
 
 }
