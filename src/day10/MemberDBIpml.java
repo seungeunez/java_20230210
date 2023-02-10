@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 
 public class MemberDBIpml implements MemberDB {
@@ -36,6 +38,13 @@ public class MemberDBIpml implements MemberDB {
 	@Override
 	public int insertMember(Member member) {
 		try {
+			
+			Bson filter = Filters.eq("_id", "SEQ_MEMBER_NO");
+			Bson update = Updates.inc("idx", 1);
+			Document doc = this.sequence.findOneAndUpdate(filter, update);
+			
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,6 +143,8 @@ public class MemberDBIpml implements MemberDB {
 
 //=====================================================================
 
+	
+	//map을 이용해서 전체조회
 	@Override
 	public List<Map<String, Object>> selectMemberMapList() {
 

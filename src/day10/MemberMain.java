@@ -32,7 +32,7 @@ public class MemberMain {
 //=======================================================================
 		
 		// map이용 - 1개 조회
-		Map<String, Object> map = mDB.selectMemberMapOne("salt");
+		Map<String, Object> map = mDB.selectMemberMapOne("salt");//내가 등록한 _id 넣으면 해당 아이디 정보 출력
 		
 		System.out.println("아이디: " + map.get("_id"));
 		System.out.println("비밀번호: " + map.get("password"));
