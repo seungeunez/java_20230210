@@ -1,5 +1,6 @@
 package day10;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.InsertOneResult;
 
 public class MemberDBIpml implements MemberDB {
@@ -28,12 +31,12 @@ public class MemberDBIpml implements MemberDB {
 	}
 
 //===============================================================================
-	
-	//등록하기
+
+	// 등록하기
 	@Override
 	public int insertMember(Member member) {
 		try {
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +52,7 @@ public class MemberDBIpml implements MemberDB {
 
 		try {
 			Document doc = new Document();
-			
+
 			// mongoDB에서 기본키(중복불가)에 "_id"는 무조건 써야함
 			doc.put("_id", map.get("_id"));
 			doc.put("password", map.get("password"));
@@ -60,9 +63,14 @@ public class MemberDBIpml implements MemberDB {
 			doc.put("regdate", map.get("regdate"));
 
 			InsertOneResult result = this.members.insertOne(doc);
+			// AcknowledgedInsertOneResult{insertedId=BsonString{value='salt'}}
 			System.out.println(result);
 
-			return 1;
+			if (result.getInsertedId().asString().getValue().equals(map.get("_id"))) {
+				return 1;
+			}
+
+			return 0;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,17 +87,52 @@ public class MemberDBIpml implements MemberDB {
 		return null;
 	}
 
+//====================================================================
+
+	// map을 이용해서 1개 조회
 	@Override
 	public Map<String, Object> selectMemberMapOne(String id) {
 
-		return null;
+		try {
+
+			Document doc = this.members.find(Filters.eq("_id", id)).first();
+
+			if (doc != null) {
+				
+				//빈공간
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				//복사
+				map.put("_id", doc.get("_id"));
+				map.put("password", doc.get("password"));
+				map.put("name", doc.get("name"));
+				map.put("age", doc.get("age"));
+				map.put("phone", doc.get("phone"));
+				map.put("role", doc.get("role"));
+				map.put("regdate", doc.get("regdate"));
+				
+				
+				return map;
+
+			}
+			return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
+
+//=====================================================================
 
 	@Override
 	public List<Member> selectMemberList() {
 
 		return null;
 	}
+
+//=====================================================================
 
 	@Override
 	public List<Map<String, Object>> selectMemberMapList() {
