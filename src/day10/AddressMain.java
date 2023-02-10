@@ -40,17 +40,25 @@ public class AddressMain {
 //==========================================================================
 
 		// 전체 조회
-		List<Address> list = aDB.selectAddressList();
+		Member member = new Member();
+		member.setId("ququ");
+		List<Address> list = aDB.selectAddressList(member);	//바로 문자열 넣어줄 수가 없음 member객체를 member에 값을 넣어주고 member라고 적어야만 출력된다
 		
 
+	//	System.out.println(list.toString());
+		
 		for (Address address : list) {
 			System.out.println("번호: " + address.getCode());
 			System.out.println("주소: " + address.getAddress());
 			System.out.println("우편번호: " + address.getPostcode());
 			System.out.println("등록일자: " + address.getRegdate());
-			System.out.println("아이디: " + address.getMemberid().getId());
+			System.out.println();
+			
+			
+		//	System.out.println("아이디: " + address.getMemberid().getId());
 			
 		}
+		
 
 	}
 

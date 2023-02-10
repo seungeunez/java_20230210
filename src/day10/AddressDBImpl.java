@@ -110,10 +110,9 @@ public class AddressDBImpl implements AddressDB {
 			Address address = documentToAddress(doc);
 
 			// members의 컬렉션에서 해당 아이디 정보를 가져와야 됨
-			//Bson filter = Filters.eq("_id", doc.getString("memberid"));
 			Document docMember = this.members.find(Filters.eq("_id", doc.getString("memberid"))).first(); // members collection이 필요함
 
-			// Documnet -> Member로 바꾼후
+			// Document -> Member로 바꾼후
 			Member member = new Member();
 			member.setId(docMember.getString("_id"));
 			member.setName(docMember.getString("name"));
@@ -147,39 +146,87 @@ public class AddressDBImpl implements AddressDB {
 	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
-
 		try {
-
-			Address address = new Address();
-			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
-			List<Address> list = new ArrayList<>();
-
-			for (Document doc : docs) {
-
-				list.add(documentToAddress(doc));
-
-				
-				address.getCode();
-				address.getAddress();
-				address.getPostcode();
-				address.getRegdate();
-				address.getMemberid();
-				
-				
-				
-			}
-
-			if (!list.isEmpty()) {
-				return list;
-			}
-			return null;
-
-		} catch (Exception e) {
+			List<Address> list = new ArrayList<Address>();
+			// 주소에서 member로 전달되는 해당아이디 주소만 목록 조회
+			Bson filter = Filters.eq( "memberid" , member.getId() );
+		  	FindIterable<Document> docs = this.addresses.find( filter );
+		  	for(Document doc : docs  ) {
+		  		// 회원에서 아이디가 일치하는 정보 가져오기
+		  		Bson filter1 = Filters.eq("_id",  member.getId() );
+		  		Document doc1 = this.members.find(filter1).first();
+		  		//System.out.println(doc);
+		  		//System.out.println(doc1);
+		  		
+		  		// 회원정보는 아직없음
+		  		Address address = documentToAddress(doc);
+		  		// set을 이용해서 address객체에 회원정보 추가
+		  		address.setMemberid( documentToMember(doc1) );
+		  		
+		  		list.add(address);
+		  	}
+		  	return list;
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
+//	public List<Address> selectAddressList(Member member) {
+//		
+//		try {
+//			
+//			//주소에서 member로 전달되는 해당 아이디 주소만 목록조회
+//			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
+//			
+//			List<Address> list = new ArrayList<>();
+//
+//			
+//			for (Document doc : docs) {
+////				System.out.println(doc);
+//				
+//				
+//				
+//				
+//				//회원에서 아이디가 일치하는 정보 가져오기
+//				Bson filter = Filters.eq("_id", member.getId());
+//				FindIterable<Document> doc1 = this.addresses.find(filter);
+////				Document doc1 = this.members.find(Filters.eq("_id",doc.getString("memberid"))).first();
+////				System.out.println(doc1);
+//				
+//				
+//				//doc1을 member1로 바꿔서 넣어줘야함
+//				
+////				Member member1 = new Member();
+////				member1.setId(doc1.getString("_id"));
+////				member1.setName(doc1.getString("name"));
+////				member1.setPassword(doc1.getString("password"));
+////				member1.setPhone(doc1.getString("phone"));
+////				member1.setRegdate(doc1.getDate("regdate"));
+////				member1.setRole(doc1.getString("role"));
+//				
+//				
+//				Address address = documentToAddress(doc);
+//		  		// set을 이용해서 address객체에 회원정보 추가
+//		  		address.setMemberid( documentToMember(doc1) );
+//				
+//				//set을 이용해서 address객체에 회원정보 추가
+//				//address.setMemberid(member1);
+//				
+//				list.add(address);
+//			}
+//
+//			if (!list.isEmpty()) {
+//				return list;
+//			}
+//			return null;
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//	}
 
 //===============================================================================
 
@@ -202,6 +249,18 @@ public class AddressDBImpl implements AddressDB {
 
 		return address;
 
+	}
+	
+	private Member documentToMember(Document doc) {
+		Member member = new Member();
+		member.setId(doc.getString("_id"));
+		member.setPassword(doc.getString("password"));
+		member.setName(doc.getString("name"));
+		member.setPhone(doc.getString("phone"));
+		member.setRole(doc.getString("role"));
+		member.setAge(doc.getInteger("age"));
+		member.setRegdate(doc.getDate("regdate"));
+		return member;
 	}
 
 }
