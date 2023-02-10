@@ -125,15 +125,28 @@ public class AddressDBImpl implements AddressDB {
 	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
-
+		
 		
 
 		try {
+			
+			Address address = new Address();
+			
+			Document doc = this.sequence.findOneAndUpdate(Filters.eq("_id", "SEQ_ADDRESS_CODE"), Updates.inc("idx", 1));
+			long code = doc.getLong("idx");
 
 			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
 			List<Address> list = new ArrayList<>();
+
 			for (Document doc : docs) {
+				
+				
+				address.getMemberid(doc.ge());
+				
 				list.add(documentToAddress(doc));
+
+				
+
 			}
 			if (!list.isEmpty()) {
 				return list;
