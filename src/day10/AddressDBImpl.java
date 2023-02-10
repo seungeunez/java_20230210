@@ -188,11 +188,9 @@ public class AddressDBImpl implements AddressDB {
 //				
 //				
 //				
-//				//회원에서 아이디가 일치하는 정보 가져오기
-//				Bson filter = Filters.eq("_id", member.getId());
-//				FindIterable<Document> doc1 = this.addresses.find(filter);
-////				Document doc1 = this.members.find(Filters.eq("_id",doc.getString("memberid"))).first();
-////				System.out.println(doc1);
+//				//회원에서 아이디가 일치하는 정보 가져오기;
+////			Document doc1 = this.members.find(Filters.eq("_id",doc.getString("memberid"))).first();
+////			System.out.println(doc1);
 //				
 //				
 //				//doc1을 member1로 바꿔서 넣어줘야함
