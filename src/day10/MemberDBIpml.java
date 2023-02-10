@@ -40,10 +40,7 @@ public class MemberDBIpml implements MemberDB {
 	@Override
 	public int insertMember(Member member) {
 		try {
-
-//			Bson filter = Filters.eq("_id", "SEQ_MEMBER_NO");
-//			Bson update = Updates.inc("idx", 1);
-//			Document doc = this.sequence.findOneAndUpdate(filter, update);
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

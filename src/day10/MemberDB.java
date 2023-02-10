@@ -5,6 +5,9 @@ import java.util.Map;
 
 public interface MemberDB {
 
+	
+	//고정적인거면 뭐 없는게 유리하고 
+	//가변적인거면 map이 유리하다
 	//추가하기
 	public int insertMember(Member member);
 	
