@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
@@ -81,21 +83,44 @@ public class AddressDBImpl implements AddressDB {
 
 //===============================================================================
 
-	//주소 1개 조회
+	// 주소 1개 조회
 	@Override
 	public Address selectAddressOne(long code) {
+
+		try {
+			Bson filter = Filters.eq("_id",code);
+			Document doc = this.addresses.find(filter).first();
+			System.out.println(doc.toString());
+			
+			Address address = new Address();
+			address.setCode(doc.getLong("_id"));
+			address.setAddress(doc.getString("address"));
+			address.setPostcode(doc.getString("postcode"));
+			address.setRegdate(doc.getDate("regdate"));
+			
+			Member member = new Member();
+			address.setMemberid(member);
+			
+			
+			
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 
 		return null;
 	}
 
 //===============================================================================
-	
+
 	@Override
 	public Map<String, Object> selectAddressMapOne(long code) {
 
 		return null;
 	}
-	
+
 //===============================================================================
 
 	@Override
@@ -103,7 +128,7 @@ public class AddressDBImpl implements AddressDB {
 
 		return null;
 	}
-	
+
 //===============================================================================
 
 	@Override
