@@ -40,8 +40,7 @@ public class AddressMain {
 //==========================================================================
 
 		// 전체 조회
-		List<Address> list = aDB.selectAddressList(null);
-		
+		List<Address> list = aDB.selectAddressList();
 		
 
 		for (Address address : list) {
@@ -49,9 +48,10 @@ public class AddressMain {
 			System.out.println("주소: " + address.getAddress());
 			System.out.println("우편번호: " + address.getPostcode());
 			System.out.println("등록일자: " + address.getRegdate());
-		
+			System.out.println("아이디: " + address.getMemberid().getId());
 			
 		}
+
 	}
 
 }

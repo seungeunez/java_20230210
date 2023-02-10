@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
@@ -17,6 +18,7 @@ public class AddressDBImpl implements AddressDB {
 
 	MongoCollection<Document> addresses = null;
 	MongoCollection<Document> sequence = null;
+	MongoCollection<Document> members = null;
 
 	public AddressDBImpl() {
 		super();
@@ -25,6 +27,7 @@ public class AddressDBImpl implements AddressDB {
 					.getCollection(Config.ADDERSSCOL);
 			this.sequence = MongoClients.create(Config.URL).getDatabase(Config.DBNAME)
 					.getCollection(Config.RESEQUENCECOL);
+			this.members = MongoClients.create(Config.URL).getDatabase(Config.DBNAME).getCollection(Config.MEMBERCOL);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,6 +73,13 @@ public class AddressDBImpl implements AddressDB {
 	public int insertAddressMap(Map<String, Object> map) {
 
 		try {
+			
+			Document doc = new Document();
+			doc.put("_id", map.get("code"));
+			doc.put("address", map.get("address"));
+			doc.put("postcode", map.get("postcode"));
+			doc.put("regdate", map.get("regdate"));
+			doc.put("memberid", map.get("memberid"));
 
 			return 0;
 
@@ -86,24 +96,30 @@ public class AddressDBImpl implements AddressDB {
 	@Override
 	public Address selectAddressOne(long code) {
 
-		try {
+		try { // 잠온다
+
 			Document doc = this.addresses.find(Filters.eq("_id", code)).first();
-			// System.out.println(doc.toString());
+			// Bson filter = Filters.eq("_id", code);
+			// Document doc = this.this.addresses.find(filter).first();
 
-			if (doc != null) {
-				Address address = new Address();
-				address.setCode(doc.getLong("_id"));
-				address.setAddress(doc.getString("address"));
-				address.setPostcode(doc.getString("postcode"));
-				address.setRegdate(doc.getDate("regdate"));
+			// Document -> Address로 변환 메소드 (회원정보는 null)
+			Address address = documentToAddress(doc);
 
-				Member member = new Member();
-				member.setId(doc.getString("member"));
-				address.setMemberid(member);
+			// members의 컬렉션에서 해당 아이디 정보를 가져와야 됨
+			Bson filter = Filters.eq("_id", doc.getString("memberid"));
+			Document docMember = this.members.find(filter).first(); // member collection이 필요함
 
-				return address;
-			}
-			return null;
+			// Documnet -> Member로 바꾼후
+			Member member = new Member();
+			member.setId(docMember.getString("_id"));
+			member.setName(docMember.getString("name"));
+			member.setPassword(docMember.getString("password"));
+			member.setPhone(docMember.getString("phone"));
+			member.setRegdate(docMember.getDate("regdate"));
+			member.setRole(docMember.getString("role"));
+
+			address.setMemberid(member);
+			return address;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,29 +141,23 @@ public class AddressDBImpl implements AddressDB {
 	// 회원에 해당하는 주소 전체 조회
 	@Override
 	public List<Address> selectAddressList(Member member) {
-		
-		
 
 		try {
-			
-			Address address = new Address();
-			
-			Document doc = this.sequence.findOneAndUpdate(Filters.eq("_id", "SEQ_ADDRESS_CODE"), Updates.inc("idx", 1));
-			long code = doc.getLong("idx");
 
+			Address address = new Address();
 			FindIterable<Document> docs = this.addresses.find(Filters.eq("memberid", member.getId()));
 			List<Address> list = new ArrayList<>();
 
 			for (Document doc : docs) {
-				
-				
-				address.getMemberid(doc.ge());
-				
+
 				list.add(documentToAddress(doc));
 
+				address.getAddress();
+				address.getPostcode();
 				
-
+				
 			}
+
 			if (!list.isEmpty()) {
 				return list;
 			}
